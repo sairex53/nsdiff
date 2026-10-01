@@ -26,6 +26,7 @@ fail()
 
 
 child_pid=""
+ready_file=""
 
 
 cleanup()
@@ -43,6 +44,12 @@ cleanup()
         2>/dev/null || true
 
     child_pid=""
+
+    if [[ -n "${ready_file:-}" ]]; then
+        rm -f \
+            "$ready_file"
+        ready_file=""
+    fi
 }
 
 
@@ -106,13 +113,52 @@ assert len(data["fields"]) > 0
 # valid JSON and exit code 1.
 #
 
+ready_file="$(
+    mktemp \
+        /tmp/nsdiff-json-ready.XXXXXX
+)"
+
+rm -f \
+    "$ready_file"
+
+
 env \
     LANG=nsdiff_JSON_TEST \
     TMPDIR=/tmp/nsdiff-json-test \
     HTTP_PROXY='http://user:SUPER_SECRET_JSON_NSDIFF@127.0.0.1:12345' \
-    sleep 10 &
+    NSDIFF_TEST_READY="$ready_file" \
+    bash -c '
+        : >"$NSDIFF_TEST_READY"
+        exec sleep 10
+    ' &
 
 child_pid=$!
+
+
+json_child_ready=0
+
+for _ in {1..200}; do
+
+    if [[ -e "$ready_file" ]]; then
+        json_child_ready=1
+        break
+    fi
+
+    if ! kill -0 \
+        "$child_pid" \
+        2>/dev/null; then
+
+        break
+    fi
+
+    sleep 0.01
+done
+
+
+if (( json_child_ready != 1 )); then
+    fail \
+        "environment child did not become ready"
+fi
 
 
 diff_json=""

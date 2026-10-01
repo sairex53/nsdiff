@@ -127,6 +127,32 @@ wait_for_proc_file()
 }
 
 
+wait_for_ready_file()
+{
+    local pid="$1"
+    local ready_file="$2"
+
+    local i
+
+    for i in {1..200}; do
+
+        if [[ -e "$ready_file" ]]; then
+            return 0
+        fi
+
+        if ! kill -0 "$pid" \
+            2>/dev/null; then
+
+            return 1
+        fi
+
+        sleep 0.01
+    done
+
+    return 1
+}
+
+
 #
 # Same-process comparison.
 #
@@ -240,9 +266,56 @@ fi
 #
 # Resource-limit difference.
 #
+# Pick a value guaranteed to differ from the current shell's soft
+# RLIMIT_NOFILE.  A fixed value is not reliable on CI runners because
+# the parent may already have that exact limit.
+#
 
+parent_nofile="$(
+    ulimit -S -n
+)"
+
+if [[ "$parent_nofile" == "unlimited" ]]; then
+
+    child_nofile=1024
+
+elif (( parent_nofile > 16 )); then
+
+    child_nofile=$((parent_nofile - 1))
+
+else
+
+    hard_nofile="$(
+        ulimit -H -n
+    )"
+
+    if [[ "$hard_nofile" == "unlimited" ]] ||
+       (( hard_nofile > parent_nofile )); then
+
+        child_nofile=$((parent_nofile + 1))
+
+    else
+
+        fail \
+            "cannot create a distinct RLIMIT_NOFILE for the test"
+    fi
+fi
+
+
+limit_ready="$(
+    mktemp \
+        /tmp/nsdiff-limit-ready.XXXXXX
+)"
+
+rm -f \
+    "$limit_ready"
+
+
+NSDIFF_TEST_NOFILE="$child_nofile" \
+NSDIFF_TEST_READY="$limit_ready" \
 bash -c '
-    ulimit -S -s 1024
+    ulimit -S -n "$NSDIFF_TEST_NOFILE"
+    : >"$NSDIFF_TEST_READY"
     exec sleep 10
 ' &
 
@@ -252,15 +325,19 @@ register_child \
     "$limit_child_pid"
 
 
-wait_for_proc_file \
+wait_for_ready_file \
     "$limit_child_pid" \
-    limits \
-    || fail "resource-limit child did not start"
+    "$limit_ready" \
+    || fail "resource-limit child did not become ready"
 
 
 run_nsdiff \
     "$$" \
     "$limit_child_pid"
+
+
+rm -f \
+    "$limit_ready"
 
 
 if (( NSDIFF_RC != 1 )); then
@@ -271,9 +348,9 @@ fi
 
 
 grep -Eq \
-    'RLIMIT_STACK[[:space:]]+different' \
+    'RLIMIT_NOFILE[[:space:]]+different' \
     <<<"$NSDIFF_OUTPUT" \
-    || fail "RLIMIT_STACK difference was not detected"
+    || fail "RLIMIT_NOFILE difference was not detected"
 
 
 stop_child \
@@ -283,12 +360,30 @@ stop_child \
 #
 # Environment difference and secret redaction.
 #
+# Wait for a readiness marker created after the child has exec'd into
+# a process carrying the requested environment.  Merely waiting for
+# /proc/PID/environ to exist is racy because that file exists before
+# env(1) has completed its exec.
+#
+
+env_ready="$(
+    mktemp \
+        /tmp/nsdiff-env-ready.XXXXXX
+)"
+
+rm -f \
+    "$env_ready"
+
 
 env \
     LANG=nsdiff_TEST_LOCALE \
     TMPDIR=/tmp/nsdiff-env-test \
     HTTP_PROXY='http://user:SUPER_SECRET_NSDIFF@127.0.0.1:12345' \
-    sleep 10 &
+    NSDIFF_TEST_READY="$env_ready" \
+    bash -c '
+        : >"$NSDIFF_TEST_READY"
+        exec sleep 10
+    ' &
 
 env_child_pid=$!
 
@@ -296,15 +391,19 @@ register_child \
     "$env_child_pid"
 
 
-wait_for_proc_file \
+wait_for_ready_file \
     "$env_child_pid" \
-    environ \
-    || fail "environment child did not start"
+    "$env_ready" \
+    || fail "environment child did not become ready"
 
 
 run_nsdiff \
     "$$" \
     "$env_child_pid"
+
+
+rm -f \
+    "$env_ready"
 
 
 if (( NSDIFF_RC != 1 )); then
