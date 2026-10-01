@@ -1,0 +1,144 @@
+.TH NSDIFF 1 "September 2026" "nsdiff @PROJECT_VERSION@" "User Commands"
+.SH NAME
+nsdiff \- compare Linux process execution environments
+.SH SYNOPSIS
+.B nsdiff
+.RI [ OPTIONS ] " PID_A PID_B"
+.br
+.B nsdiff
+.RI [ OPTIONS ] " --against FILE PID"
+.br
+.B nsdiff
+.RI [ OPTIONS ] " --snapshots FILE_A FILE_B"
+.br
+.B nsdiff
+.RI "--capture FILE PID [--snapshot-format native|portable]"
+.br
+.B nsdiff
+.RI "--convert-snapshot IN OUT --snapshot-format native|portable"
+.br
+.B nsdiff
+.RI "[--json] --snapshot-info|--verify-snapshot|--snapshot-compat|--snapshot-id|--semantic-id|--snapshot-manifest FILE"
+.SH DESCRIPTION
+Compare namespaces, effective credentials, resource limits, selected cgroup v2
+files, network sets, selected mounts, exec-time environment and security state.
+This is a bounded diagnostic model, not an exhaustive process dump. No process
+state is changed. Root is not required; restricted fields become unavailable.
+.SH OUTPUT OPTIONS
+.TP
+.B --json
+Comparison JSON schema 1. Incompatible with section filtering and other modes.
+.TP
+.B --only-differences
+Show only semantic differences.
+.TP
+.B --explain
+Show differences and explain their possible effects.
+.TP
+.B --summary
+Show per-section comparable, different and unavailable counts.
+.TP
+.BR -q ", " --quiet
+Write no normal comparison output. Use the exit status.
+.TP
+.B --section NAME
+Repeat to select namespaces, credentials, limits, cgroup, network, mounts,
+environment or security. The name all selects all sections. Without an explicit
+output mode, section selection uses compact difference output.
+.TP
+.BR -h ", " --help
+Display complete option help.
+.TP
+.BR -V ", " --version
+Display the build version.
+.SH SNAPSHOT OPTIONS
+.TP
+.B --capture FILE PID
+Capture a process. Default native v3 is ABI/endian-dependent.
+.TP
+.B --snapshot-format native|portable
+Select capture/conversion output. Portable schema v1 is architecture-independent
+JSON with exact integer and byte encodings, imported by the ordinary diff engine.
+.TP
+.B --convert-snapshot IN OUT
+Convert between native v1/v2/v3 and portable v1. Requires --snapshot-format.
+.TP
+.B --against FILE PID
+Compare a snapshot with a live process.
+.TP
+.B --snapshots A B
+Compare two saved snapshots; formats may differ.
+.TP
+.B --snapshot-info FILE
+Display metadata. Supports --json.
+.TP
+.B --verify-snapshot FILE
+Validate the container and semantic model. Supports --json. Native integrity hashes
+are checked; portable v1 has no stored checksum.
+.TP
+.B --snapshot-compat FILE
+Display format/layout compatibility. Supports --json.
+.TP
+.B --snapshot-id FILE
+Native raw payload SHA-256 identity (nsdiff:sha256:). Portable files return semantic
+identity with the distinct nsdiff:semantic-sha256: prefix. Supports --json.
+.TP
+.B --semantic-id FILE
+Canonical architecture-independent model identity for either format. Excludes
+producer, provenance, PID/starttime and native padding. Supports --json.
+.TP
+.B --snapshot-manifest FILE
+Display identity, integrity and provenance. Supports --json.
+.TP
+.B --snapshot-schema
+Display supported native/portable schemas. Supports --json.
+.TP
+.B --export-snapshot-json FILE
+Redacted comparison-schema diagnostic export. This is not an importable snapshot.
+.SH STREAMS
+FILE may be - for stdin on reads or stdout on capture/conversion. Two comparison
+inputs cannot both use stdin. Capture status goes to stderr when writing stdout.
+File arguments following options accept leading dashes. Use -- to end option
+parsing before positional PIDs. Quote filenames containing spaces or shell syntax.
+.SH EXIT STATUS
+.TP
+.B 0
+Successful operation or no comparable differences. Unavailable fields can exist.
+.TP
+.B 1
+Successful comparison with semantic differences.
+.TP
+.B 2
+Invalid invocation, malformed snapshot, fatal collection or output failure.
+.SH SECURITY
+Lossless snapshots contain private environment values. File writes use 0600,
+randomized adjacent temporary files, fsync and atomic rename followed by directory
+fsync. Existing destination symlinks are replaced without writing to their targets.
+Shell redirections control their own permissions. Proxy values are redacted only
+in diagnostic output. Review other diagnostic values before sharing.
+.PP
+SHA-256 is not a signature. No authenticity is claimed. Files have an 8 MiB input
+limit and strict field bounds. Fatal signals can leave a private temporary file.
+.SH LIMITATIONS
+Collection is not atomic across fields. Starttime/pidfd checks reduce process
+lifetime races but cannot freeze process configuration. A matching procfs/PID
+namespace is required. Native files require the same ABI and byte order.
+.PP
+Network sets are bounded to 64 entries each; watched environment values to 4095
+bytes. Truncated fields are unavailable. Only documented watched fields are
+compared. Cgroup lookup assumes a conventional target /sys/fs/cgroup mount.
+Legacy JSON schema 1 strings use byte-codepoint escaping; portable byte objects
+explicitly distinguish UTF-8 and hex. See the format documentation.
+.SH EXAMPLES
+.EX
+nsdiff --explain $$ 1234
+nsdiff --capture before.json $$ --snapshot-format portable
+nsdiff --against before.json $$ --summary
+nsdiff --convert-snapshot before.json local.snap --snapshot-format native
+nsdiff --capture - $$ | nsdiff --verify-snapshot -
+.EE
+.SH SEE ALSO
+.BR proc (5),
+.BR namespaces (7),
+.BR capabilities (7),
+.BR cgroups (7)

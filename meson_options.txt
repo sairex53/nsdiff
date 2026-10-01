@@ -1,0 +1,2 @@
+option('hardening', type: 'boolean', value: true, description: 'Enable supported Linux compiler/linker hardening')
+option('fuzz', type: 'boolean', value: false, description: 'Build Clang libFuzzer targets')

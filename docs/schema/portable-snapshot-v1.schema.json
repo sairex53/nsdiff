@@ -1,0 +1,1227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "nsdiff portable snapshot v1",
+  "$comment": "Importer additionally enforces exact decoded byte lengths, numeric ranges, fixed identities, unique logical set items, count equality and resource bounds. Unknown optional keys are permitted.",
+  "type": "object",
+  "required": [
+    "document_type",
+    "schema_version",
+    "required_features",
+    "producer",
+    "provenance",
+    "snapshot"
+  ],
+  "properties": {
+    "document_type": {
+      "const": "nsdiff-portable-snapshot"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "required_features": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "const": "nsdiff"
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 31
+        }
+      }
+    },
+    "provenance": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "captured_sec",
+            "captured_nsec",
+            "kernel",
+            "architecture"
+          ],
+          "properties": {
+            "captured_sec": {
+              "type": "string",
+              "pattern": "^(0|-?[1-9][0-9]*)$",
+              "maxLength": 20,
+              "description": "Signed 64-bit Unix seconds"
+            },
+            "captured_nsec": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 999999999
+            },
+            "kernel": {
+              "description": "Non-NUL bytes, maximum decoded length 127 bytes. UTF-8 byte length is checked by the importer.",
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "encoding",
+                    "value"
+                  ],
+                  "properties": {
+                    "encoding": {
+                      "const": "utf-8"
+                    },
+                    "value": {
+                      "type": "string",
+                      "maxLength": 127,
+                      "pattern": "^[^\\u0000]*$"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "encoding",
+                    "value"
+                  ],
+                  "properties": {
+                    "encoding": {
+                      "const": "hex"
+                    },
+                    "value": {
+                      "type": "string",
+                      "maxLength": 254,
+                      "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                    }
+                  }
+                }
+              ]
+            },
+            "architecture": {
+              "description": "Non-NUL bytes, maximum decoded length 63 bytes. UTF-8 byte length is checked by the importer.",
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "encoding",
+                    "value"
+                  ],
+                  "properties": {
+                    "encoding": {
+                      "const": "utf-8"
+                    },
+                    "value": {
+                      "type": "string",
+                      "maxLength": 63,
+                      "pattern": "^[^\\u0000]*$"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "encoding",
+                    "value"
+                  ],
+                  "properties": {
+                    "encoding": {
+                      "const": "hex"
+                    },
+                    "value": {
+                      "type": "string",
+                      "maxLength": 126,
+                      "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "snapshot": {
+      "$ref": "#/$defs/process_snapshot"
+    }
+  },
+  "$defs": {
+    "limit_value": {
+      "type": "object",
+      "required": [
+        "unlimited",
+        "value"
+      ],
+      "properties": {
+        "unlimited": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$",
+          "maxLength": 20,
+          "description": "Unsigned decimal, <=18446744073709551615; importer also checks destination type range."
+        }
+      }
+    },
+    "resource_limit_info": {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "soft",
+        "hard",
+        "units"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "nofile",
+            "nproc",
+            "stack",
+            "memlock",
+            "as",
+            "core",
+            "fsize"
+          ]
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "soft": {
+          "$ref": "#/$defs/limit_value"
+        },
+        "hard": {
+          "$ref": "#/$defs/limit_value"
+        },
+        "units": {
+          "description": "Non-NUL bytes, maximum decoded length 15 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 15,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 30,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "limits_info": {
+      "type": "object",
+      "required": [
+        "status",
+        "entries"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": {
+            "$ref": "#/$defs/resource_limit_info"
+          }
+        }
+      }
+    },
+    "namespace_info": {
+      "type": "object",
+      "required": [
+        "name",
+        "status",
+        "dev",
+        "ino",
+        "target"
+      ],
+      "properties": {
+        "name": {
+          "description": "Non-NUL bytes, maximum decoded length 15 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 15,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 30,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "dev": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$",
+          "maxLength": 20,
+          "description": "Unsigned decimal, <=18446744073709551615; importer also checks destination type range."
+        },
+        "ino": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$",
+          "maxLength": 20,
+          "description": "Unsigned decimal, <=18446744073709551615; importer also checks destination type range."
+        },
+        "target": {
+          "description": "Non-NUL bytes, maximum decoded length 63 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 63,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 126,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "capability_set_info": {
+      "type": "object",
+      "required": [
+        "kind",
+        "present",
+        "mask"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "inheritable",
+            "permitted",
+            "effective",
+            "bounding",
+            "ambient"
+          ]
+        },
+        "present": {
+          "type": "boolean"
+        },
+        "mask": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$",
+          "maxLength": 20,
+          "description": "Unsigned decimal, <=18446744073709551615; importer also checks destination type range."
+        }
+      }
+    },
+    "proc_status_info": {
+      "type": "object",
+      "required": [
+        "status",
+        "have_uid",
+        "uid",
+        "have_gid",
+        "gid",
+        "capabilities",
+        "have_no_new_privs",
+        "no_new_privs",
+        "have_seccomp",
+        "seccomp"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "have_uid": {
+          "type": "boolean"
+        },
+        "uid": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Unsigned decimal, <=18446744073709551615; importer also checks destination type range."
+          }
+        },
+        "have_gid": {
+          "type": "boolean"
+        },
+        "gid": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$",
+            "maxLength": 20,
+            "description": "Unsigned decimal, <=18446744073709551615; importer also checks destination type range."
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "$ref": "#/$defs/capability_set_info"
+          }
+        },
+        "have_no_new_privs": {
+          "type": "boolean"
+        },
+        "no_new_privs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "have_seccomp": {
+          "type": "boolean"
+        },
+        "seccomp": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        }
+      }
+    },
+    "cgroup_file_info": {
+      "type": "object",
+      "required": [
+        "name",
+        "status",
+        "value"
+      ],
+      "properties": {
+        "name": {
+          "description": "Non-NUL bytes, maximum decoded length 31 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 31,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 62,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "value": {
+          "description": "Non-NUL bytes, maximum decoded length 127 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 127,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 254,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "cgroup_info": {
+      "type": "object",
+      "required": [
+        "status",
+        "v2",
+        "path",
+        "files"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "v2": {
+          "type": "boolean"
+        },
+        "path": {
+          "description": "Non-NUL bytes, maximum decoded length 4095 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 4095,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 8190,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        },
+        "files": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/cgroup_file_info"
+          }
+        }
+      }
+    },
+    "mount_point_info": {
+      "type": "object",
+      "required": [
+        "status",
+        "mounted",
+        "mount_id",
+        "target",
+        "root",
+        "fstype",
+        "source",
+        "read_only",
+        "nosuid",
+        "nodev",
+        "noexec"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "mounted": {
+          "type": "boolean"
+        },
+        "mount_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "target": {
+          "description": "Non-NUL bytes, maximum decoded length 63 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 63,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 126,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        },
+        "root": {
+          "description": "Non-NUL bytes, maximum decoded length 255 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 255,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 510,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        },
+        "fstype": {
+          "description": "Non-NUL bytes, maximum decoded length 63 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 63,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 126,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        },
+        "source": {
+          "description": "Non-NUL bytes, maximum decoded length 255 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 255,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 510,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        },
+        "read_only": {
+          "type": "boolean"
+        },
+        "nosuid": {
+          "type": "boolean"
+        },
+        "nodev": {
+          "type": "boolean"
+        },
+        "noexec": {
+          "type": "boolean"
+        }
+      }
+    },
+    "shared_memory_info": {
+      "type": "object",
+      "required": [
+        "status",
+        "size_bytes"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "size_bytes": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$",
+          "maxLength": 20,
+          "description": "Unsigned decimal, <=18446744073709551615; importer also checks destination type range."
+        }
+      }
+    },
+    "mounts_info": {
+      "type": "object",
+      "required": [
+        "status",
+        "total_mounts",
+        "entries",
+        "shm"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "total_mounts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": {
+            "$ref": "#/$defs/mount_point_info"
+          }
+        },
+        "shm": {
+          "$ref": "#/$defs/shared_memory_info"
+        }
+      }
+    },
+    "environment_entry_info": {
+      "type": "object",
+      "required": [
+        "status",
+        "name",
+        "present",
+        "redact_value",
+        "value"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "name": {
+          "description": "Non-NUL bytes, maximum decoded length 31 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 31,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 62,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        },
+        "present": {
+          "type": "boolean"
+        },
+        "redact_value": {
+          "type": "boolean"
+        },
+        "value": {
+          "description": "Non-NUL bytes, maximum decoded length 4095 bytes. UTF-8 byte length is checked by the importer.",
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "utf-8"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 4095,
+                  "pattern": "^[^\\u0000]*$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "encoding",
+                "value"
+              ],
+              "properties": {
+                "encoding": {
+                  "const": "hex"
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 8190,
+                  "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "environment_info": {
+      "type": "object",
+      "required": [
+        "status",
+        "total_entries",
+        "entries"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "total_entries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 33,
+          "maxItems": 33,
+          "items": {
+            "$ref": "#/$defs/environment_entry_info"
+          }
+        }
+      }
+    },
+    "network_set_info": {
+      "type": "object",
+      "required": [
+        "status",
+        "count",
+        "items"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "permission-denied",
+            "not-supported",
+            "process-gone",
+            "io-error",
+            "parse-error",
+            "truncated"
+          ]
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "items": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 64,
+          "items": {
+            "description": "Non-NUL bytes, maximum decoded length 191 bytes. UTF-8 byte length is checked by the importer.",
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "encoding",
+                  "value"
+                ],
+                "properties": {
+                  "encoding": {
+                    "const": "utf-8"
+                  },
+                  "value": {
+                    "type": "string",
+                    "maxLength": 191,
+                    "pattern": "^[^\\u0000]*$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "encoding",
+                  "value"
+                ],
+                "properties": {
+                  "encoding": {
+                    "const": "hex"
+                  },
+                  "value": {
+                    "type": "string",
+                    "maxLength": 382,
+                    "pattern": "^(?:(?!00)[0-9a-f]{2})*$"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "network_info": {
+      "type": "object",
+      "required": [
+        "interfaces",
+        "ipv4_default_routes",
+        "ipv6_addresses",
+        "ipv6_default_routes"
+      ],
+      "properties": {
+        "interfaces": {
+          "$ref": "#/$defs/network_set_info"
+        },
+        "ipv4_default_routes": {
+          "$ref": "#/$defs/network_set_info"
+        },
+        "ipv6_addresses": {
+          "$ref": "#/$defs/network_set_info"
+        },
+        "ipv6_default_routes": {
+          "$ref": "#/$defs/network_set_info"
+        }
+      }
+    },
+    "process_snapshot": {
+      "type": "object",
+      "required": [
+        "pid",
+        "starttime_ticks",
+        "namespaces",
+        "proc_status",
+        "limits",
+        "cgroup",
+        "mounts",
+        "environment",
+        "network"
+      ],
+      "properties": {
+        "pid": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "starttime_ticks": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$",
+          "maxLength": 20,
+          "description": "Unsigned decimal, <=18446744073709551615; importer also checks destination type range."
+        },
+        "namespaces": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/namespace_info"
+          }
+        },
+        "proc_status": {
+          "$ref": "#/$defs/proc_status_info"
+        },
+        "limits": {
+          "$ref": "#/$defs/limits_info"
+        },
+        "cgroup": {
+          "$ref": "#/$defs/cgroup_info"
+        },
+        "mounts": {
+          "$ref": "#/$defs/mounts_info"
+        },
+        "environment": {
+          "$ref": "#/$defs/environment_info"
+        },
+        "network": {
+          "$ref": "#/$defs/network_info"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1034 @@
+{
+  "document_type": "nsdiff-portable-snapshot",
+  "producer": {
+    "name": "nsdiff",
+    "version": "0.1.0"
+  },
+  "provenance": null,
+  "required_features": [],
+  "schema_version": 1,
+  "snapshot": {
+    "cgroup": {
+      "files": [
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "memory.max"
+          },
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "max"
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "memory.high"
+          },
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "max"
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "memory.swap.max"
+          },
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "max"
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "cpu.max"
+          },
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "max"
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "cpu.weight"
+          },
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "max"
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "pids.max"
+          },
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "max"
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "cpuset.cpus.effective"
+          },
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "max"
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "cpuset.mems.effective"
+          },
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "max"
+          }
+        }
+      ],
+      "path": {
+        "encoding": "utf-8",
+        "value": "/example"
+      },
+      "status": "ok",
+      "v2": true
+    },
+    "environment": {
+      "entries": [
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "PATH"
+          },
+          "present": true,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "/bin:/usr/bin"
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "LANG"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "LC_ALL"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "LC_CTYPE"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "TZ"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "HOME"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "SHELL"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "TMPDIR"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "TMP"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "TEMP"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "XDG_RUNTIME_DIR"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "XDG_CONFIG_HOME"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "XDG_DATA_HOME"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "LD_LIBRARY_PATH"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "LD_PRELOAD"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "LD_AUDIT"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "PYTHONPATH"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "PYTHONHOME"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "VIRTUAL_ENV"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "JAVA_HOME"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "GOMAXPROCS"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "DISPLAY"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "WAYLAND_DISPLAY"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "DBUS_SESSION_BUS_ADDRESS"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "SSH_AUTH_SOCK"
+          },
+          "present": false,
+          "redact_value": false,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "HTTP_PROXY"
+          },
+          "present": true,
+          "redact_value": true,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": "https://user:TEST_SECRET@invalid/"
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "HTTPS_PROXY"
+          },
+          "present": false,
+          "redact_value": true,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "ALL_PROXY"
+          },
+          "present": false,
+          "redact_value": true,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "NO_PROXY"
+          },
+          "present": false,
+          "redact_value": true,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "http_proxy"
+          },
+          "present": false,
+          "redact_value": true,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "https_proxy"
+          },
+          "present": false,
+          "redact_value": true,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "all_proxy"
+          },
+          "present": false,
+          "redact_value": true,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        },
+        {
+          "name": {
+            "encoding": "utf-8",
+            "value": "no_proxy"
+          },
+          "present": false,
+          "redact_value": true,
+          "status": "ok",
+          "value": {
+            "encoding": "utf-8",
+            "value": ""
+          }
+        }
+      ],
+      "status": "ok",
+      "total_entries": 2
+    },
+    "limits": {
+      "entries": [
+        {
+          "hard": {
+            "unlimited": false,
+            "value": "18446744073709551615"
+          },
+          "kind": "nofile",
+          "soft": {
+            "unlimited": false,
+            "value": "1024"
+          },
+          "status": "ok",
+          "units": {
+            "encoding": "utf-8",
+            "value": "bytes"
+          }
+        },
+        {
+          "hard": {
+            "unlimited": false,
+            "value": "18446744073709551615"
+          },
+          "kind": "nproc",
+          "soft": {
+            "unlimited": false,
+            "value": "1024"
+          },
+          "status": "ok",
+          "units": {
+            "encoding": "utf-8",
+            "value": "bytes"
+          }
+        },
+        {
+          "hard": {
+            "unlimited": false,
+            "value": "18446744073709551615"
+          },
+          "kind": "stack",
+          "soft": {
+            "unlimited": false,
+            "value": "1024"
+          },
+          "status": "ok",
+          "units": {
+            "encoding": "utf-8",
+            "value": "bytes"
+          }
+        },
+        {
+          "hard": {
+            "unlimited": false,
+            "value": "18446744073709551615"
+          },
+          "kind": "memlock",
+          "soft": {
+            "unlimited": false,
+            "value": "1024"
+          },
+          "status": "ok",
+          "units": {
+            "encoding": "utf-8",
+            "value": "bytes"
+          }
+        },
+        {
+          "hard": {
+            "unlimited": false,
+            "value": "18446744073709551615"
+          },
+          "kind": "as",
+          "soft": {
+            "unlimited": false,
+            "value": "1024"
+          },
+          "status": "ok",
+          "units": {
+            "encoding": "utf-8",
+            "value": "bytes"
+          }
+        },
+        {
+          "hard": {
+            "unlimited": false,
+            "value": "18446744073709551615"
+          },
+          "kind": "core",
+          "soft": {
+            "unlimited": false,
+            "value": "1024"
+          },
+          "status": "ok",
+          "units": {
+            "encoding": "utf-8",
+            "value": "bytes"
+          }
+        },
+        {
+          "hard": {
+            "unlimited": false,
+            "value": "18446744073709551615"
+          },
+          "kind": "fsize",
+          "soft": {
+            "unlimited": false,
+            "value": "1024"
+          },
+          "status": "ok",
+          "units": {
+            "encoding": "utf-8",
+            "value": "bytes"
+          }
+        }
+      ],
+      "status": "ok"
+    },
+    "mounts": {
+      "entries": [
+        {
+          "fstype": {
+            "encoding": "utf-8",
+            "value": "tmpfs"
+          },
+          "mount_id": 1,
+          "mounted": true,
+          "nodev": false,
+          "noexec": false,
+          "nosuid": false,
+          "read_only": false,
+          "root": {
+            "encoding": "utf-8",
+            "value": "/"
+          },
+          "source": {
+            "encoding": "utf-8",
+            "value": "none"
+          },
+          "status": "ok",
+          "target": {
+            "encoding": "utf-8",
+            "value": "/"
+          }
+        },
+        {
+          "fstype": {
+            "encoding": "utf-8",
+            "value": "tmpfs"
+          },
+          "mount_id": 2,
+          "mounted": true,
+          "nodev": false,
+          "noexec": false,
+          "nosuid": false,
+          "read_only": false,
+          "root": {
+            "encoding": "utf-8",
+            "value": "/"
+          },
+          "source": {
+            "encoding": "utf-8",
+            "value": "none"
+          },
+          "status": "ok",
+          "target": {
+            "encoding": "utf-8",
+            "value": "/proc"
+          }
+        },
+        {
+          "fstype": {
+            "encoding": "utf-8",
+            "value": "tmpfs"
+          },
+          "mount_id": 3,
+          "mounted": true,
+          "nodev": false,
+          "noexec": false,
+          "nosuid": false,
+          "read_only": false,
+          "root": {
+            "encoding": "utf-8",
+            "value": "/"
+          },
+          "source": {
+            "encoding": "utf-8",
+            "value": "none"
+          },
+          "status": "ok",
+          "target": {
+            "encoding": "utf-8",
+            "value": "/sys"
+          }
+        },
+        {
+          "fstype": {
+            "encoding": "utf-8",
+            "value": "tmpfs"
+          },
+          "mount_id": 4,
+          "mounted": true,
+          "nodev": false,
+          "noexec": false,
+          "nosuid": false,
+          "read_only": false,
+          "root": {
+            "encoding": "utf-8",
+            "value": "/"
+          },
+          "source": {
+            "encoding": "utf-8",
+            "value": "none"
+          },
+          "status": "ok",
+          "target": {
+            "encoding": "utf-8",
+            "value": "/dev"
+          }
+        },
+        {
+          "fstype": {
+            "encoding": "utf-8",
+            "value": "tmpfs"
+          },
+          "mount_id": 5,
+          "mounted": true,
+          "nodev": false,
+          "noexec": false,
+          "nosuid": false,
+          "read_only": false,
+          "root": {
+            "encoding": "utf-8",
+            "value": "/"
+          },
+          "source": {
+            "encoding": "utf-8",
+            "value": "none"
+          },
+          "status": "ok",
+          "target": {
+            "encoding": "utf-8",
+            "value": "/dev/shm"
+          }
+        },
+        {
+          "fstype": {
+            "encoding": "utf-8",
+            "value": "tmpfs"
+          },
+          "mount_id": 6,
+          "mounted": true,
+          "nodev": false,
+          "noexec": false,
+          "nosuid": false,
+          "read_only": false,
+          "root": {
+            "encoding": "utf-8",
+            "value": "/"
+          },
+          "source": {
+            "encoding": "utf-8",
+            "value": "none"
+          },
+          "status": "ok",
+          "target": {
+            "encoding": "utf-8",
+            "value": "/tmp"
+          }
+        },
+        {
+          "fstype": {
+            "encoding": "utf-8",
+            "value": "tmpfs"
+          },
+          "mount_id": 7,
+          "mounted": true,
+          "nodev": false,
+          "noexec": false,
+          "nosuid": false,
+          "read_only": false,
+          "root": {
+            "encoding": "utf-8",
+            "value": "/"
+          },
+          "source": {
+            "encoding": "utf-8",
+            "value": "none"
+          },
+          "status": "ok",
+          "target": {
+            "encoding": "utf-8",
+            "value": "/run"
+          }
+        }
+      ],
+      "shm": {
+        "size_bytes": "67108864",
+        "status": "ok"
+      },
+      "status": "ok",
+      "total_mounts": 7
+    },
+    "namespaces": [
+      {
+        "dev": "4",
+        "ino": "4026531840",
+        "name": {
+          "encoding": "utf-8",
+          "value": "mnt"
+        },
+        "status": "ok",
+        "target": {
+          "encoding": "utf-8",
+          "value": "mnt:[4026531840]"
+        }
+      },
+      {
+        "dev": "4",
+        "ino": "4026531841",
+        "name": {
+          "encoding": "utf-8",
+          "value": "net"
+        },
+        "status": "ok",
+        "target": {
+          "encoding": "utf-8",
+          "value": "net:[4026531841]"
+        }
+      },
+      {
+        "dev": "4",
+        "ino": "4026531842",
+        "name": {
+          "encoding": "utf-8",
+          "value": "pid"
+        },
+        "status": "ok",
+        "target": {
+          "encoding": "utf-8",
+          "value": "pid:[4026531842]"
+        }
+      },
+      {
+        "dev": "4",
+        "ino": "4026531843",
+        "name": {
+          "encoding": "utf-8",
+          "value": "user"
+        },
+        "status": "ok",
+        "target": {
+          "encoding": "utf-8",
+          "value": "user:[4026531843]"
+        }
+      },
+      {
+        "dev": "4",
+        "ino": "4026531844",
+        "name": {
+          "encoding": "utf-8",
+          "value": "uts"
+        },
+        "status": "ok",
+        "target": {
+          "encoding": "utf-8",
+          "value": "uts:[4026531844]"
+        }
+      },
+      {
+        "dev": "4",
+        "ino": "4026531845",
+        "name": {
+          "encoding": "utf-8",
+          "value": "ipc"
+        },
+        "status": "ok",
+        "target": {
+          "encoding": "utf-8",
+          "value": "ipc:[4026531845]"
+        }
+      },
+      {
+        "dev": "4",
+        "ino": "4026531846",
+        "name": {
+          "encoding": "utf-8",
+          "value": "cgroup"
+        },
+        "status": "ok",
+        "target": {
+          "encoding": "utf-8",
+          "value": "cgroup:[4026531846]"
+        }
+      },
+      {
+        "dev": "4",
+        "ino": "4026531847",
+        "name": {
+          "encoding": "utf-8",
+          "value": "time"
+        },
+        "status": "ok",
+        "target": {
+          "encoding": "utf-8",
+          "value": "time:[4026531847]"
+        }
+      }
+    ],
+    "network": {
+      "interfaces": {
+        "count": 2,
+        "items": [
+          {
+            "encoding": "utf-8",
+            "value": "eth0"
+          },
+          {
+            "encoding": "utf-8",
+            "value": "lo"
+          }
+        ],
+        "status": "ok"
+      },
+      "ipv4_default_routes": {
+        "count": 0,
+        "items": [],
+        "status": "ok"
+      },
+      "ipv6_addresses": {
+        "count": 0,
+        "items": [],
+        "status": "ok"
+      },
+      "ipv6_default_routes": {
+        "count": 0,
+        "items": [],
+        "status": "ok"
+      }
+    },
+    "pid": 42,
+    "proc_status": {
+      "capabilities": [
+        {
+          "kind": "inheritable",
+          "mask": "9223372036854775808",
+          "present": true
+        },
+        {
+          "kind": "permitted",
+          "mask": "9223372036854775808",
+          "present": true
+        },
+        {
+          "kind": "effective",
+          "mask": "9223372036854775808",
+          "present": true
+        },
+        {
+          "kind": "bounding",
+          "mask": "9223372036854775808",
+          "present": true
+        },
+        {
+          "kind": "ambient",
+          "mask": "9223372036854775808",
+          "present": true
+        }
+      ],
+      "gid": [
+        "1000",
+        "1000",
+        "1000",
+        "1000"
+      ],
+      "have_gid": true,
+      "have_no_new_privs": true,
+      "have_seccomp": true,
+      "have_uid": true,
+      "no_new_privs": 1,
+      "seccomp": 2,
+      "status": "ok",
+      "uid": [
+        "1000",
+        "1000",
+        "1000",
+        "1000"
+      ]
+    },
+    "starttime_ticks": "1234567890123456789"
+  }
+}

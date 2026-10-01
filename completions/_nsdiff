@@ -1,0 +1,24 @@
+#compdef nsdiff
+_arguments \
+  '*--section[comparison domain]:section:(namespaces credentials limits cgroup network mounts environment security all)' \
+  '--snapshot-format[output format]:format:(native portable)' \
+  '--help[help]' \
+  '--version[version]' \
+  '--json[json]' \
+  '--only-differences[only differences]' \
+  '--explain[explain]' \
+  '--summary[summary]' \
+  '--quiet[quiet]' \
+  '--capture[capture]' \
+  '--against[against]' \
+  '--snapshots[snapshots]' \
+  '--snapshot-info[snapshot info]' \
+  '--verify-snapshot[verify snapshot]' \
+  '--snapshot-compat[snapshot compat]' \
+  '--snapshot-id[snapshot id]' \
+  '--semantic-id[semantic id]' \
+  '--snapshot-manifest[snapshot manifest]' \
+  '--snapshot-schema[snapshot schema]' \
+  '--export-snapshot-json[export snapshot json]' \
+  '--convert-snapshot[convert snapshot]' \
+  '*:file or PID:_files'

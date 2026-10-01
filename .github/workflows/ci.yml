@@ -1,0 +1,50 @@
+name: build-test
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+        compiler: [gcc, clang]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y meson ninja-build pkg-config libcap-dev libmount-dev libjansson-dev clang python3-jsonschema
+      - run: meson setup build -Dbuildtype=debug -Db_sanitize=address,undefined -Db_lundef=false -Dwerror=true
+        env:
+          CC: ${{ matrix.compiler }}
+      - run: meson compile -C build && meson test -C build --print-errorlogs
+      - run: python3 scripts/check-registration.py build
+      - run: git diff --check && git diff --cached --check
+      - run: scripts/install-smoke.sh build
+      # Each architecture imports the exact same fixture and checks its fixed semantic SHA.
+      - run: ./build/src/nsdiff --semantic-id tests/fixtures/portable-v1.json
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y meson ninja-build pkg-config libcap-dev libmount-dev libjansson-dev valgrind clang clang-tidy cppcheck python3-jsonschema
+      - run: meson setup build -Dbuildtype=release -Dwerror=true && meson compile -C build && meson test -C build --print-errorlogs
+      - run: scripts/check-hardening.sh build/src/nsdiff
+      - run: scripts/valgrind-smoke.sh build/src/nsdiff
+      - run: scripts/static-check.sh build --strict
+      - run: scripts/stress.sh build/src/nsdiff 1000
+      - run: scripts/install-smoke.sh build
+      - run: meson dist -C build
+  fuzz:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y clang meson ninja-build pkg-config libcap-dev libmount-dev libjansson-dev
+      - run: CC=clang meson setup build-fuzz -Dfuzz=true -Dbuildtype=debug -Db_lundef=false && meson compile -C build-fuzz
+      - run: scripts/fuzz-smoke.sh build-fuzz 15
+  fedora:
+    runs-on: ubuntu-24.04
+    container: fedora:44
+    steps:
+      - run: dnf install -y git gcc clang meson ninja-build pkgconf-pkg-config libcap-devel libmount-devel jansson-devel python3 python3-jsonschema
+      - uses: actions/checkout@v4
+      - run: meson setup build -Dwerror=true && meson compile -C build && meson test -C build --print-errorlogs
